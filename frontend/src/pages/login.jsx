@@ -102,7 +102,7 @@ export default function Login() {
         <LoginAlert />
         <LoginForm />
         <p className="mt-4 text-center text-sm">
-          Don't have an account?{" "}
+          Dont have an account?{" "}
           <Link to="/signup" className="text-blue-500 hover:underline">
             Sign up
           </Link>
