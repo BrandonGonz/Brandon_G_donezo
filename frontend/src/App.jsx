@@ -21,6 +21,7 @@ function App() {
 
           {/* Protected Routes */}
           <Route path="/todos" element={<MainLayout />}>
+          <Route path="/todos" element={<ProtectedRoute><Todos /></ProtectedRoute>} />
             <Route
               index // renders on /todos
               element={
