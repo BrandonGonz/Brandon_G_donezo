@@ -18,9 +18,23 @@ export default function Todos() {
       return data;
     },
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["todos"] });
+      queryClient.invalidateQueries("todos");
     },
   });
+
+  // MARK: - DELETE TODO
+  const { mutate: deleteTodo } = useMutation({
+    mutationKey: ["deleteTodo"],
+    mutationFn: async (todoId) => {
+      const axiosInstance = await getAxiosClient();
+      const { data } = await axiosInstance.delete(`http://localhost:8080/todos/${todoId}`);
+      return data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries("todos");
+    },
+  });
+  
 
   // 4. useQuery for fetching todos
   const { data, isLoading, isError } = useQuery({
@@ -51,6 +65,13 @@ export default function Todos() {
     createNewTodo(values);
     toggleNewTodoModal();
   };
+  // MARK: HANDLE DELETE
+  const handleDelete = (todoId) => {
+    if (confirm("Are you sure you want to delete this todo?")) {
+      deleteTodo(todoId);
+    }
+  };
+  
 
   // 8. Loading/Error states
   if (isLoading) return <div>Loading Todos...</div>;
@@ -96,6 +117,12 @@ export default function Todos() {
                   <h3 className="text-lg">{todo.name}</h3>
                   <p className="text-sm">{todo.description}</p>
                 </div>
+                <button
+                  onClick={() => handleDelete(todo.id)}
+                  className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded"
+                >
+                  Delete
+                </button>
               </li>
             ))}
           </ul>
@@ -105,6 +132,7 @@ export default function Todos() {
       </div>
     );
   }
+
 
   // 12. Final JSX
   return (
